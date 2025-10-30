@@ -55,7 +55,74 @@ Wire.h (Para la comunicación I2C)
 LiquidCrystal_I2C.h (Para el control de la pantalla)
 
 Puesta en Marcha (Cómo Probar)
-## 4. ¿Cómo Usarlo?
+
+## 4. Código
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Dirección I2C del LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Pin del sensor
+int sensorPin = A0;
+
+// Valores reales de calibración basados en tus pruebas
+const int SENSOR_MIN = 0;     // Valor sin peso
+const int SENSOR_MAX = 603;   // Valor máximo que mediste con 10N
+const int PESO_MAXIMO = 3000; // Peso máximo en gramos
+
+void setup() {
+  // Iniciar comunicación serial
+  Serial.begin(9600);
+
+  // Iniciar LCD
+  lcd.init();
+  lcd.backlight();
+  
+  // Mensaje de inicio
+  lcd.print("Bascula de Bobina");
+  lcd.setCursor(0, 1);
+  lcd.print("Calibrado! :)");
+  delay(1500);
+  lcd.clear();
+}
+
+void loop() {
+  // Leer el valor del sensor con promedio para suavizar
+  int total = 0;
+  for (int i = 0; i < 5; i++) {
+    total += analogRead(sensorPin);
+    delay(10);
+  }
+  int valorSensor = total / 5;
+
+  // Calcular peso con los valores REALES de calibración
+  long peso = map(valorSensor, SENSOR_MIN, SENSOR_MAX, 0, PESO_MAXIMO);
+  peso = constrain(peso, 0, PESO_MAXIMO); // Limitar entre 0 y 3000g
+
+  // Mostrar en LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Peso: ");
+  lcd.print(peso);
+  lcd.print(" g   ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Sensor: ");
+  lcd.print(valorSensor);
+  lcd.print("   ");
+
+  // Mostrar también en el monitor serial
+  Serial.print("Sensor: ");
+  Serial.print(valorSensor);
+  Serial.print(" | Peso: ");
+  Serial.print(peso);
+  Serial.println(" g");
+
+  delay(250);
+}
+
+## 5. ¿Cómo Usarlo?
 
 1.  Abre el proyecto en Tinkercad: `https://www.tinkercad.com/things/8eLf0fXbOwz/editel?returnTo=%2Fdashboard&sharecode=PoYVCAh_cT4Vr7H8XVxGOpCPJ13DE1lWH0dfBpBoHGE`
 2.  Haz clic en el botón verde **"Iniciar Simulación"**.
@@ -63,7 +130,7 @@ Puesta en Marcha (Cómo Probar)
 4.  Mueve el deslizador que aparecerá para simular la aplicación de peso.
 5.  Observa cómo el "Peso Simulado" se actualiza en tiempo real en la pantalla LCD.
 
-## 5. Componentes del Proyecto
+## 6. Componentes del Proyecto
 
 Esta es la descripción detallada de cada componente usado.
 
@@ -76,7 +143,7 @@ Esta es la descripción detallada de cada componente usado.
 | <img width="108" height="242" alt="image" src="https://github.com/user-attachments/assets/d40000ad-0bd8-417f-b5e9-d40bfd70e8db" /> | **Resistencia de 10 kΩ** | Es una resistencia "pull-down" crucial. Se conecta desde el pin A0 a GND (Tierra). [cite_start]Su trabajo es estabilizar la lectura del sensor de fuerza, asegurando que el Arduino lea "0" cuando no hay peso. |
 | <img width="333" height="217" alt="image" src="https://github.com/user-attachments/assets/ebdd566c-d1bd-4d0d-9c76-efe7ba7b8b40" /> | **Placa de Pruebas (Protoboard)** | Es la base donde se montan y conectan todos los componentes temporalmente, sin necesidad de soldar. Los rieles laterales se usan para distribuir la energía (5V y GND) fácilmente. |
 
-## 6. FAQ (Preguntas Frecuentes)
+## 7. FAQ (Preguntas Frecuentes)
 **P: ¿Por qué este proyecto es una simulación y no un circuito físico?** R: Este proyecto se desarrolló en Tinkercad como un prototipo para validar el concepto. La simulación nos permite probar la lógica del programa (leer un sensor, convertir el dato y mostrarlo) y verificar todas las conexiones eléctricas de forma segura y sin costo, antes de invertir en los componentes físicos.
 
 **P: ¿Por qué se usa un "Sensor de Fuerza" (FSR) y no una "Célula de Carga" real?** R: La biblioteca de componentes de Tinkercad es limitada y no incluye la "Célula de Carga" (Load Cell) ni el módulo amplificador HX711, que son los componentes estándar para básculas de precisión. El Sensor de Fuerza (FSR) es el componente más cercano disponible en el simulador que nos permite emular la lógica de leer un peso.
