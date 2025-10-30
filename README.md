@@ -1,4 +1,5 @@
-# Lab.-Microcontroladores
+# Lab.-Controladores y Microcontroladores Programables
+# Bascula Digital para Bobinas de Impresion 3D
 ## Integrantes del Equipo
 | Nombre | Matricula | Carrera |
 | :--- | :--- | :--- |
