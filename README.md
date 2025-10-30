@@ -75,3 +75,14 @@ Esta es la descripción detallada de cada componente usado.
 | <img width="336" height="108" alt="image" src="https://github.com/user-attachments/assets/663e5079-43bc-4824-b919-5cec8b2799d3" /> | **Sensor de Fuerza (FSR)** | Este componente simula la báscula (célula de carga). Es una resistencia que cambia su valor cuando se le aplica presión. [cite_start]Se conecta con una pata a 5V y la otra al pin A0. |
 | <img width="108" height="242" alt="image" src="https://github.com/user-attachments/assets/d40000ad-0bd8-417f-b5e9-d40bfd70e8db" /> | **Resistencia de 10 kΩ** | Es una resistencia "pull-down" crucial. Se conecta desde el pin A0 a GND (Tierra). [cite_start]Su trabajo es estabilizar la lectura del sensor de fuerza, asegurando que el Arduino lea "0" cuando no hay peso. |
 | <img width="333" height="217" alt="image" src="https://github.com/user-attachments/assets/ebdd566c-d1bd-4d0d-9c76-efe7ba7b8b40" /> | **Placa de Pruebas (Protoboard)** | Es la base donde se montan y conectan todos los componentes temporalmente, sin necesidad de soldar. Los rieles laterales se usan para distribuir la energía (5V y GND) fácilmente. |
+
+## 6. FAQ (Preguntas Frecuentes)
+**P: ¿Por qué este proyecto es una simulación y no un circuito físico?** R: Este proyecto se desarrolló en Tinkercad como un prototipo para validar el concepto. La simulación nos permite probar la lógica del programa (leer un sensor, convertir el dato y mostrarlo) y verificar todas las conexiones eléctricas de forma segura y sin costo, antes de invertir en los componentes físicos.
+
+**P: ¿Por qué se usa un "Sensor de Fuerza" (FSR) y no una "Célula de Carga" real?** R: La biblioteca de componentes de Tinkercad es limitada y no incluye la "Célula de Carga" (Load Cell) ni el módulo amplificador HX711, que son los componentes estándar para básculas de precisión. El Sensor de Fuerza (FSR) es el componente más cercano disponible en el simulador que nos permite emular la lógica de leer un peso.
+
+**P: Si construyo esto en la vida real, ¿qué necesito cambiar?** R: Deberás reemplazar dos componentes:
+El Sensor de Fuerza (FSR) se reemplaza por una Célula de Carga (de 1kg, 5kg, etc.).
+La Resistencia de 10kΩ se reemplaza por un módulo HX711. El resto del circuito (Arduino y Pantalla LCD I2C) y la lógica de mostrar los datos serían idénticos.
+
+P: **¿Para qué sirve la Resistencia de 10kΩ en el circuito?** R: Actúa como una resistencia "pull-down". Su trabajo es darle al pin analógico A0 un camino estable hacia GND (Tierra). Sin ella, el pin A0 estaría "flotando", dando lecturas aleatorias y ruidosas. Con la resistencia, nos aseguramos de que cuando el sensor no está presionado, la lectura sea 0.
